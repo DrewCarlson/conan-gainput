@@ -1,0 +1,32 @@
+cmake_minimum_required(VERSION 2.8)
+project(gainput_test)
+
+set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+
+#include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+
+include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
+
+conan_basic_setup()
+conan_define_targets()
+
+if(UNIX AND NOT APPLE)
+    set(LINUX TRUE)
+endif()
+
+if(APPLE)
+    set(CMAKE_CXX_FLAGS "-ObjC++")
+endif()
+
+if(LINUX)
+    set(CMAKE_CXX_FLAGS "-DLINUX")
+endif()
+
+add_executable(gainput_test gainput_test.cpp)
+set_target_properties(gainput_test PROPERTIES LINK_FLAGS ${CONAN_EXE_LINKER_FLAGS})
+message(STATUS "Linker flags")
+message(STATUS ${CONAN_EXE_LINKER_FLAGS} )
+conan_target_link_libraries(gainput_test)
+target_link_libraries( ${CONAN_EXE_LINKER_FLAGS} )
