@@ -14,6 +14,7 @@ class GainputConan(ConanFile):
     license         = "MIT"
     settings        = "arch", "build_type", "compiler", "os"
     generators      = "cmake"
+    exports_sources = "lib/source/*"
     options         = {
       "shared": [True, False],
       "gainput_debug": [True, False],
@@ -28,22 +29,24 @@ class GainputConan(ConanFile):
       "gainput_enable_recorder=False", \
       "gainput_lib_build=True",
 
-    def configure_cmake(self):
-        cmake = CMake(self)
-        cmake.definitions["GAINPUT_DEBUG"] = self.options.gainput_debug
-        cmake.definitions["GAINPUT_DEV"] = self.options.gainput_dev
-        cmake.definitions["GAINPUT_ENABLE_RECORDER"] = self.options.gainput_enable_recorder
-        cmake.definitions["GAINPUT_LIB_BUILD"] = self.options.gainput_lib_build
-        cmake.configure()
-        return cmake
-
     def source(self):
         self.run("git clone git://github.com/jkuhlmann/gainput.git")
-        copy_tree("gainput", ".")
 
     def build(self):
         cmake = CMake(self)
-        cmake = self.configure_cmake()
+        #if self.options.shared:
+        #  cmake.definitions["GAINPUT_BUILD_STATIC"] = "OFF"
+        #else:
+        #  cmake.definitions["GAINPUT_BUILD_SHARED"] = "OFF"
+        if self.options.gainput_debug:
+          cmake.definitions["GAINPUT_DEBUG"] = "ON"
+        if self.options.gainput_dev:
+          cmake.definitions["GAINPUT_DEV"] = "ON"
+        if self.options.gainput_enable_recorder:
+          cmake.definitions["GAINPUT_ENABLE_RECORDER"] = "ON"
+        if self.options.gainput_lib_build:
+          cmake.definitions["GAINPUT_LIB_BUILD"] = "ON"
+        cmake.configure(source_folder="gainput")
         cmake.build()
 
     def collect_headers(self, include_folder):
@@ -52,9 +55,12 @@ class GainputConan(ConanFile):
         self.copy("*.inl", dst="include", src=include_folder)
 
     def package(self):
-        self.collect_headers("lib/include")
-        self.copy("*.a"  , dst="lib", keep_path=False)
-        self.copy("*.so" , dst="lib", keep_path=False)
+        self.collect_headers("gainput/lib/include")
         self.copy("*.lib", dst="lib", keep_path=False)
         self.copy("*.dll", dst="bin", keep_path=False)
         self.copy("*.dylib*", dst="lib", keep_path=False)
+        self.copy("*.so", dst="lib", keep_path=False)
+        self.copy("*.a", dst="lib", keep_path=False)
+
+    def package_info(self):
+        self.cpp_info.libs = ["gainput"]

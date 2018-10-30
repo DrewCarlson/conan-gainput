@@ -1,0 +1,41 @@
+[settings]
+    arch=x86_64
+    build_type=Release
+    compiler=apple-clang
+    compiler.libcxx=libc++
+    compiler.version=9.1
+    os=Macos
+
+[requires]
+
+
+[options]
+    gainput_debug=False
+    gainput_dev=False
+    gainput_enable_recorder=False
+    gainput_lib_build=True
+    shared=False
+
+[full_settings]
+    arch=x86_64
+    build_type=Release
+    compiler=apple-clang
+    compiler.libcxx=libc++
+    compiler.version=9.1
+    os=Macos
+
+[full_requires]
+
+
+[full_options]
+    gainput_debug=False
+    gainput_dev=False
+    gainput_enable_recorder=False
+    gainput_lib_build=True
+    shared=False
+
+[recipe_hash]
+
+
+[env]
+
