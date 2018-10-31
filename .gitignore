@@ -1,0 +1,4 @@
+conaninfo.txt
+conanbuildinfo.cmake
+conanbuildinfo.txt
+test_package/build/
